@@ -4,16 +4,14 @@ public class Nahravka {
     String nazov;
     String interpret;
     String zdroj;
+    String date;
     boolean oblubene;
 
-
-
-
-
-    public Nahravka(String nazov, String interpret, String zdroj, boolean oblubene) {
+    public Nahravka(String nazov, String interpret, String zdroj, String date, boolean oblubene) {
         this.nazov = nazov;
         this.interpret = interpret;
         this.zdroj = zdroj;
+        this.date = date;
         this.oblubene = oblubene;
     }
 
@@ -47,5 +45,15 @@ public class Nahravka {
 
     public void setOblubene(boolean oblubene) {
         this.oblubene = oblubene;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    @Override
+    public String toString() {
+        return "Názov      " + nazov + "\n" +
+                "Interpret  " + interpret;
     }
 }

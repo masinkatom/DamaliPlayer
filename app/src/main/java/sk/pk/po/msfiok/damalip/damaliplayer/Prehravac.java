@@ -1,8 +1,5 @@
 package sk.pk.po.msfiok.damalip.damaliplayer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,13 +30,15 @@ public class Prehravac extends AppCompatActivity {
     TextView remainingTimeLabel;
     ImageButton btnFavSelected;
     int totalTime;
-
+    private Nahravky nahravky;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prehravac);
+
+        nahravky = Nahravky.getInstance();
 
         songname = findViewById(R.id.songname);
         mPrehravac = findViewById(R.id.mPrehravac);
@@ -47,10 +48,10 @@ public class Prehravac extends AppCompatActivity {
         btnFavSelected = findViewById(R.id.btnFav);
 
         Intent intent = getIntent();
-
-        songname.setText(intent.getStringExtra("SONGNAME"));
         final int nahravka_pozicia = intent.getIntExtra("NAHRAVKA_POZICIA", 0);
-        nahravka = MainActivity.nahravky.get(nahravka_pozicia);
+        nahravka = nahravky.getNahravky().get(nahravka_pozicia);
+        songname.setText(nahravka.toString());
+
         switch (intent.getIntExtra("COLOR", 0)){
             case 0: redTheme(); break;
             case 1: blueTheme(); break;
@@ -58,7 +59,6 @@ public class Prehravac extends AppCompatActivity {
         }
 
         try {
-           // MainActivity.mediaPlayer.stop();
             MainActivity.mediaPlayer.reset();
             MainActivity.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             MainActivity.mediaPlayer.setDataSource(nahravka.getZdroj());
@@ -91,10 +91,9 @@ public class Prehravac extends AppCompatActivity {
                     nahravka.setOblubene(true);
                     btnFavSelected.setImageResource(R.drawable.ic_star_on_24dp);
                     Toast.makeText(context, "Pridané do Obľúbené", Toast.LENGTH_SHORT).show();
-                    MainActivity.nahravky.get(nahravka_pozicia).setOblubene(true);
 
                     String data = "";
-                    for (Nahravka nahravka:MainActivity.nahravky) {
+                    for (Nahravka nahravka:nahravky.getNahravky()) {
                         if (nahravka.isOblubene()){
                             data += nahravka.getZdroj() + "\n";
                         }
@@ -108,10 +107,8 @@ public class Prehravac extends AppCompatActivity {
                     btnFavSelected.setImageResource(R.drawable.ic_star_off_24dp);
                     Toast.makeText(context, "Odobrané z Obľúbené", Toast.LENGTH_SHORT).show();
 
-                    MainActivity.nahravky.get(nahravka_pozicia).setOblubene(false);
-                    //MainActivity.arrayList.remove(nahravka_pozicia);
                     String data = "";
-                    for (Nahravka nahravka:MainActivity.nahravky) {
+                    for (Nahravka nahravka:nahravky.getNahravky()) {
                         if (nahravka.isOblubene()){
                             data += nahravka.getZdroj() + "\n";
                         }
